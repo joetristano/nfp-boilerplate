@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [fullname, setFullName] = useState('');
   const router = useRouter();
 
   function handleUsernameChange(e) {
@@ -14,36 +16,51 @@ export default function Login() {
     setPassword(e.target.value);
   }
 
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+
+  function handleFullNameChange(e) {
+    setFullName(e.target.value);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/token`, {
+    const data  = {
+      "username": username,
+      "email": email,
+      "full_name": fullname,
+      "disabled": false,
+      "password": password
+    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
       method: 'POST',
-      body: formData
+      body: JSON.stringify(data),
+      headers:{
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
     if (res.status == 200) {
       const json = await res.json();
-      localStorage.setItem('token', json.access_token);
-      router.push("home");
+      router.push("login");
     } else {
-      alert('Login failed.')
+      alert('Account Creation failed.')
     }
   }
 
   return (
     <>
-      <title>Logon to Agile Forecast</title>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
             <img
               className="mx-auto h-12 w-auto"
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Weather-few-clouds.svg/240px-Weather-few-clouds.svg.png"
-              alt="Workflow"
+              src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Add_user_icon_%28blue%29.svg"
+              alt="CreateAccount"
             />
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
           </div>
           <form className="mt-8 space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
@@ -65,6 +82,38 @@ export default function Login() {
                 />
               </div>
               <div>
+                <label htmlFor="email" className="sr-only">
+                  email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  autoComplete="email"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="fullname" className="sr-only">
+                  Full Name
+                </label>
+                <input
+                  id="fullname"
+                  name="fullname"
+                  type="text"
+                  autoComplete="fullname"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Fullname"
+                  value={fullname}
+                  onChange={handleFullNameChange}
+                />
+              </div>              
+              <div>
                 <label htmlFor="password" className="sr-only">
                   Password
                 </label>
@@ -82,26 +131,6 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
-
             <div>
               <button
                 type="submit"
@@ -110,14 +139,9 @@ export default function Login() {
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
                 </span>
-                Sign in
+                Create Account
               </button>
             </div>
-            <div className="text-sm">
-                <a href="createaccount" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Create Account
-                </a>
-              </div>            
           </form>
         </div>
       </div>

@@ -18,6 +18,9 @@ services:
   db:
     image: postgres:14
     restart: always
+    build: nfp-frontend
+    ports:
+      - 5432:5432    
     environment:
       POSTGRES_USER: nfp_boilerplate_user
       POSTGRES_DB: nfp_boilerplate_dev
@@ -27,3 +30,8 @@ services:
 
 volumes:
   pgdata:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./nfp-data
