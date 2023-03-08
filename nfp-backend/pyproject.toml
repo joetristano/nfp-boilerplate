@@ -45,7 +45,10 @@ uvloop = "0.16.0"
 watchgod = "0.7"
 websockets = "10.1"
 psycopg2 = "^2.9.5"
-plotly = "^5.13.1"
+pandas = "^1.5.3"
+scipy = "^1.10.1"
+jira = "^3.4.1"
+pychart-js = "^0.3.0"
 
 
 [build-system]

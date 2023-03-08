@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import users
+from .routers import users, plots
 from .database import database, notes
 
 
@@ -24,6 +24,7 @@ class Note(BaseModel):
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(plots.router)
 
 origins = [
     "http://localhost",
